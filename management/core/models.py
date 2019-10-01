@@ -1,10 +1,12 @@
 from django.db import models
+from datetime import datetime
 # Create your models here.
 
 
 class Debt(models.Model):
     debtor = models.ForeignKey('user.User', on_delete=models.CASCADE)
     payment = models.ForeignKey('PaymentRegister', on_delete=models.CASCADE)
+    date = models.DateField(verbose_name="Data do débito", default=datetime.today)
     value = models.DecimalField(max_digits=30, decimal_places=2, verbose_name='Valor da dívida')    
 
     class Meta:        

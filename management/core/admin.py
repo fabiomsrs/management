@@ -15,7 +15,7 @@ class PaymentRegisterAdmin(admin.ModelAdmin):
 
 @admin.register(Debt)
 class DebtAdmin(admin.ModelAdmin):
-	list_display = ('debtor','value')
+	list_display = ('debtor','value','date')
 	search_fields = ('debtor__username',)
 
 	def has_add_permission(self, request, obj=None):		
