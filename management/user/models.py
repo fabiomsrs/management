@@ -12,16 +12,10 @@ class User(models.Model):
 	pay_day = models.IntegerField(verbose_name='Dia do mês que é realizado o Pagamento')
 	
 	def payment_is_overdue(self, month, year):
-		date = datetime.today().date()
-		if not month:
-			month = date.month
-		if not year:
-			year = date.year        
-		if not self.my_payments.filter(payment_date__year=year,payment_date__month=month).exists() and month != date.month:
-			print("@", self.username)
+		date = datetime.today().date()		
+		if not self.my_payments.filter(payment_date__year=year,payment_date__month=month).exists() and int(month) != date.month:
 			return True
 		elif not self.my_payments.filter(payment_date__year=year,payment_date__month=month).exists() and self.pay_day < date.day:
-			print("@@", self.username)
 			return True
 		return False
 

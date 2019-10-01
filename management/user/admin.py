@@ -80,14 +80,15 @@ class UserAdmin(admin.ModelAdmin):
 		if not self.em_dias(obj):
 			return False
 
-		for payment in obj.my_payments.all():
+		for payment in obj.my_payments.filter(payment_date__year=self.year, payment_date__month=self.month):
 			if payment.is_paid_incompletely:
 				return False
 		return True
 	
-	def get_queryset(self, request):		
-		self.month = request.GET.get('month')
-		self.year = request.GET.get('year')
+	def get_queryset(self, request):
+		date = datetime.datetime.today().date()		
+		self.month = request.GET.get('month', date.month)
+		self.year = request.GET.get('year', date.year)
 		return super().get_queryset(request)		
 
 	em_dias.boolean = True
