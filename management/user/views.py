@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.core.exceptions import ValidationError
 from user.models import User
-from core.models import PaymentRegister
+from core.models import PaymentRegister, Debt
 from core.response import UnicodeJsonResponse
 # Create your views here.
 
@@ -16,3 +16,11 @@ def user_payment(request, pk):
     except ValidationError as e:
         return UnicodeJsonResponse({"success":False, "message":"Pagamento já foi realizado esse mês"})
     return UnicodeJsonResponse({"success":False})
+
+def debt_payment(request, pk):
+    debt = Debt.objects.get(id=pk)
+    payment = debt.payment
+    payment.paid_value= payment.value_to_be_paid
+    payment.save()
+    return UnicodeJsonResponse({"success":True})
+

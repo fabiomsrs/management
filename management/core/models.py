@@ -30,7 +30,7 @@ class PaymentRegister(models.Model):
         return False 
 
     def clean(self):
-        if PaymentRegister.objects.filter(user=self.user, payment_date__month=self.payment_date.month, payment_date__year=self.payment_date.year).exists():
+        if PaymentRegister.objects.filter(user=self.user, payment_date__month=self.payment_date.month, payment_date__year=self.payment_date.year, paid_value=self.paid_value).exists():
             raise ValidationError(_('Pagamento desse mês ja foi realizado'))
             
     def save(self, *args, **kwargs):

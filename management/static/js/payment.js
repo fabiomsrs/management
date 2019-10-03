@@ -79,8 +79,40 @@ $(function(){
         }else{
             toastr.error("Não foi possivel realizar essa operação");
         }
-    });  
+    });
     
+    $(".payment_debt").on("click", function(){    
+                                                                        
+        id = $(this).attr("id");
+        $("#id_debt").val(id)
+        $("#debtModal").modal("show")
+
+    });
+
+    $("#payment_debt_submit").on("click", function(){
+        id = $("#id_debt").val()
+        payment_debt(id)
+    });
+
+    
+    function payment_debt(id){        
+        $.ajax({
+            type: 'GET',
+            url: '/debt_payment/'+ id +'/',
+            dataType: 'json'
+            }).done(function(data){ 
+                if(data["success"]){
+                    toastr.success("pago com sucesso")
+                    reloadAfter(1000)
+                }      
+                else{
+                    toastr.error(data["message"])                
+                }          
+            })
+            .fail(function(jq, textStatus, error){
+                toastr.error("Não foi possivel realizar essa operação");
+            });
+    }
     
     
 });

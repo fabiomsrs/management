@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.db.models import Q
 from django.utils.html import format_html
+from django.utils import timezone
 from user.models import User
 import datetime
-from django.utils import timezone
 import calendar
 
 # Register your models here.
@@ -80,7 +80,7 @@ class UserAdmin(admin.ModelAdmin):
 	def pagar(self, obj):
 		return format_html(
 			'<a href="#" class="button btn-primary payment_button">pagar</a>'
-		)	
+		)
 	
 	def em_dias(self, obj):		
 		return not obj.payment_is_overdue(self.month,self.year)
