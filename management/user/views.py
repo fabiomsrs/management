@@ -9,7 +9,7 @@ def user_payment(request, pk):
     payment_value = request.POST.get("payment_value")
     try:
         user = User.objects.get(id=pk)
-        PaymentRegister.objects.create(user=user, paid_value=payment_value,value_to_be_paid=payment_value)
+        PaymentRegister.objects.create(user=user, paid_value=payment_value,value_to_be_paid=user.monthly_payment)
         return UnicodeJsonResponse({"success":True})
     except PaymentRegister.DoesNotExist:
         return UnicodeJsonResponse({"success":False})
