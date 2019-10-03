@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db.models import Q
+from django.utils.html import format_html
 from user.models import User
 import datetime
 from django.utils import timezone
@@ -67,11 +68,17 @@ class IsOverDueFilter(admin.SimpleListFilter):
  
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-	list_display = ('first_name','username','em_dias','pagamento_completo','pay_day','store_name')
+	list_display = ('first_name','username','em_dias','pagamento_completo','monthly_payment','pay_day','store_name','pagar')
 	list_filter = (IsOverDueFilter,YearFilter,MonthFilter)
 	search_fields = ('username', 'first_name')
+	change_list_template = "admin/user/user/change_list.html"
 	year = None
-	month = None	
+	month = None
+
+	def pagar(self, obj):
+		return format_html(
+			'<a href="#" class="button btn-primary payment_button">pagar</a>'
+		)	
 	
 	def em_dias(self, obj):		
 		return not obj.payment_is_overdue(self.month,self.year)
@@ -89,7 +96,9 @@ class UserAdmin(admin.ModelAdmin):
 		date = datetime.datetime.today().date()		
 		self.month = request.GET.get('month', date.month)
 		self.year = request.GET.get('year', date.year)
-		return super().get_queryset(request)		
+		date = datetime.date(int(self.year), int(self.month), 1)
+		qs = super().get_queryset(request)
+		return qs.filter(date_subscription__lte=date)
 
 	em_dias.boolean = True
 	pagamento_completo.boolean = True
