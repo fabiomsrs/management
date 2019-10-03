@@ -60,11 +60,17 @@ class IsOverDueFilter(admin.SimpleListFilter):
 
 	def queryset(self, request, queryset):
 		value = self.value()
-		date = datetime.datetime.today().date()		
-		if value == 'Nao':			
-			return queryset.filter(~Q(my_payments__payment_date__month=date.month) & Q(pay_day__lt = date.day))
+		date = datetime.datetime.today().date()
+		month = request.GET.get('month', date.month)
+		year = request.GET.get('year', date.year) 		
+		if value == 'Nao':
+			if int(month) != date.month:
+				return queryset.filter(~Q(my_payments__payment_date__month=int(month)) & ~Q(my_payments__payment_date__year=int(year)))
+			return queryset.filter(~Q(my_payments__payment_date__month=int(month)) & Q(pay_day__lt = date.day))
 		elif value == 'Sim':
-			return queryset.exclude(~Q(my_payments__payment_date__month=date.month) & Q(pay_day__lt = date.day))
+			if int(month) != date.month:
+				return queryset.exclude(~Q(my_payments__payment_date__month=int(month)) & ~Q(my_payments__payment_date__month=int(year)))
+			return queryset.exclude(~Q(my_payments__payment_date__month=int(month)) & ~Q(my_payments__payment_date__month=int(year)) & Q(pay_day__lt = date.day))
 		return queryset
 
  
