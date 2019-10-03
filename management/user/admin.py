@@ -79,7 +79,7 @@ class UserAdmin(admin.ModelAdmin):
 
 	def pagar(self, obj):
 		return format_html(
-			'<a href="#" class="button btn-primary payment_button">pagar</a>'
+			'<a href="#" class="button btn-primary payment_button" month='+str(self.month)+' year='+str(self.year)+'>pagar</a>'
 		)
 	
 	def em_dias(self, obj):		

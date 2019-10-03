@@ -3,13 +3,17 @@ from django.core.exceptions import ValidationError
 from user.models import User
 from core.models import PaymentRegister, Debt
 from core.response import UnicodeJsonResponse
+import datetime
 # Create your views here.
 
 def user_payment(request, pk):
     payment_value = request.POST.get("payment_value")
+    year = int(request.POST.get("year"))
+    month = int(request.POST.get("month"))
+    date = datetime.date(year,month,1)
     try:
         user = User.objects.get(id=pk)
-        PaymentRegister.objects.create(user=user, paid_value=payment_value,value_to_be_paid=user.monthly_payment)
+        PaymentRegister.objects.create(user=user, paid_value=payment_value,value_to_be_paid=user.monthly_payment, payment_date=date)
         return UnicodeJsonResponse({"success":True})
     except PaymentRegister.DoesNotExist:
         return UnicodeJsonResponse({"success":False})

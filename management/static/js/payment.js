@@ -48,20 +48,30 @@ $(function(){
     $(".payment_button").on("click", function(){
         id = $(this).parent().siblings().first().children().first().val()
         payment_value = $(this).parent().siblings().eq(5).text()
+        month = $(this).attr("month")
+        year = $(this).attr("year")
         $("#id_user").val(id)
         $("#payment_value").val(payment_value)
+        $("#month").val(month)
+        $("#year").val(year)
         $(".bd-modal-sm").modal("show")
     })
 
     $("#payment_submit").on("click", function(){
         id = $("#id_user").val()
         payment_value = $("#payment_value").val()
+        month = $("#month").val()
+        year = $("#year").val()
 
         if(payment_value){
             $.ajax({
                 type: 'POST',
                 url: '/user_payment/'+ id +'/',
-                data: {"payment_value":payment_value},
+                data: {
+                    "payment_value":payment_value,
+                    "month":month,
+                    "year":year
+                },
                 dataType: 'json'
                 }).done(function(data){ 
                     if(data["success"]){
