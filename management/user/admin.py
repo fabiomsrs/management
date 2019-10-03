@@ -14,6 +14,8 @@ class YearFilter(admin.SimpleListFilter):
 
 	def lookups(self, request, model_admin):
 		return (
+			('2021', '2021'),
+			('2020', '2020'),
 			('2019', '2019'),
 			('2018', '2018'),
 		)

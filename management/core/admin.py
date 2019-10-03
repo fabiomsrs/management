@@ -2,6 +2,7 @@ from django.contrib import admin
 from core.models import PaymentRegister, Debt
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from user.admin import MonthFilter, YearFilter
 # Register your models here.
 
 
@@ -17,6 +18,7 @@ class PaymentRegisterAdmin(admin.ModelAdmin):
 class DebtAdmin(admin.ModelAdmin):
 	list_display = ('debtor','value','date')
 	search_fields = ('debtor__username',)
+	list_filter = (YearFilter,MonthFilter)
 
 	def has_add_permission(self, request, obj=None):		
 		return False
@@ -24,5 +26,10 @@ class DebtAdmin(admin.ModelAdmin):
 	def has_change_permission(self, request, obj=None):
 		return False
 
-	# def has_delete_permission(self, request, obj=None):		
-	# 	return False		
+	def get_queryset(self, request):
+		import datetime
+		date = datetime.datetime.today().date()
+		self.month = request.GET.get('month', date.month)
+		self.year = request.GET.get('year', date.year)
+		qs = super().get_queryset(request)
+		return qs.filter(date__year=int(self.year), date__month=int(self.month))
